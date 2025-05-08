@@ -1,0 +1,117 @@
+Overview:
+This project is a comprehensive educational platform designed to support online learning and teaching for institutions, instructors, and students. It facilitates the creation, management, and delivery of educational content, assessments, and user interactions through a structured web application. The platform is built using a layered architecture consisting of entities, DTOs, mappers, services, and REST controllers.
+
+Objectives:
+The goal of the platform is to provide a feature-rich, role-based online education system that allows:
+
+Students to enroll in courses, attend lessons, complete assignments/quizzes, and track their performance.
+
+Instructors to create courses, manage assignments and quizzes, and evaluate student submissions.
+
+Admins to oversee user management and platform configuration.
+
+Authenticated access and security across all users via token-based login and registration.
+
+🔧 Core Functionalities and Features
+🧑‍🏫 Admin Module (Managed by AdminService, AdminController)
+Manage users: Create, update, and delete students and instructors.
+
+View and manage the overall platform status and configurations.
+
+Assign roles and permissions to users.
+
+📚 Course Management (CourseService, CourseController)
+Instructors can create and publish courses with detailed content.
+
+Students can browse available courses and enroll in them.
+
+Courses contain structured lessons, assignments, and quizzes.
+
+📋 Assignment Management (AssignmentService, AssignmentController)
+Instructors can create assignments tied to specific lessons or courses.
+
+Students can submit assignments with file uploads or text-based responses.
+
+Submissions are stored and evaluated by instructors.
+
+Assignments are mapped using AssignmentMapper and tied to Submission.
+
+🎓 Student Module (StudentService, StudentController)
+View enrolled courses, track progress, and access assignments.
+
+Attempt quizzes and view past performance.
+
+Submit assignments and receive grades or feedback.
+
+🧑‍🏫 Instructor Module (InstructorService, InstructorController)
+Create and manage quizzes (QuizService), questions (QuestionService), and lessons.
+
+Evaluate student submissions.
+
+View course analytics and student performance.
+
+❓ Quiz and Assessment System
+Instructors can create quizzes with various question types (QuestionType) and options.
+
+Students can attempt quizzes (QuizAttempt) and view their scores.
+
+Quiz results and performance data are stored in the Performance and Assessment entities.
+
+🔐 Authentication and Security (AuthService, UserService, EmailService, ConfirmationTokenService)
+Token-based login and registration using confirmation tokens.
+
+Secure email confirmation for user registration.
+
+Email validation using EmailValidatorService.
+
+📩 Email Notifications (EmailService)
+Used for registration confirmations and system notifications.
+
+Supports sending verification and reminder emails.
+
+📈 Performance Tracking
+Monitor performance using Performance, Assessment, and QuizAttempt entities.
+
+Admins and instructors can generate progress reports for students.
+
+📦 Media and Lesson Support
+Support for uploading and associating MediaFiles with lessons.
+
+Lessons are structured into Courses and can include video, documents, or other resources.
+
+📊 Entities Overview
+The entity package contains domain models that represent the real-world objects involved in the educational process. These include:
+
+Users: User, Student, Instructor, Admin, with role assignments (Role)
+
+Content: Course, Lesson, Assignment, MediaFiles
+
+Assessments: Quiz, Question, QuestionOption, Submission, QuizAttempt
+
+Tracking: Attendance, Performance, Assessment, Enrollment
+
+Each of these is mapped with corresponding mappers and services to ensure clean separation between business logic and data representation.
+
+🔐 Security and Role-Based Access Control
+Managed under the Security package.
+
+Roles (Admin, Instructor, Student) determine access to specific endpoints and features.
+
+Access is guarded through authentication and JWT tokens.
+
+✅ Requirements
+Must support role-based access (Student, Instructor, Admin)
+
+User registration with email confirmation
+
+Instructors can manage courses, quizzes, and assignments
+
+Students can view courses, submit work, and get results
+
+Admins can oversee the platform and manage users
+
+Performance and assessment tracking
+
+RESTful API design with clear service/controller structure
+
+Secure, token-based login system
