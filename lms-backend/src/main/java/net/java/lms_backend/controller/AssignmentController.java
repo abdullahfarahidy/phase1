@@ -1,23 +1,21 @@
 package net.java.lms_backend.controller;
 
 import net.java.lms_backend.Service.AssignmentService;
-import net.java.lms_backend.Service.CourseService;
 import net.java.lms_backend.dto.*;
-import net.java.lms_backend.entity.Course;
-import net.java.lms_backend.entity.Lesson;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/assignment")
 public class AssignmentController {
-    @Autowired
-    private AssignmentService assignmentService;
+
+    private final AssignmentService assignmentService;
+
+    public AssignmentController(AssignmentService assignmentService) {
+        this.assignmentService = assignmentService;
+    }
 
     // Create a new assignment
     @PostMapping

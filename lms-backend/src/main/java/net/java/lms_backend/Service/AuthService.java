@@ -1,4 +1,4 @@
-package net.java.lms_backend.Service;
+package net.java.lms_backend.service;
 
 import net.java.lms_backend.Repositrory.EmailSender;
 import net.java.lms_backend.Repositrory.UserRepository;
@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static net.java.lms_backend.mapper.UserMapper.ToUserRegister;
+
 @Service
 public class AuthService {
     private final UserService userService;
@@ -26,15 +27,15 @@ public class AuthService {
     private final EmailSender emailSender;
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-//    private final JwtTokenProvider tokenProvider;
+
 //    private final AuthenticationManager authenticationManager;
-    public AuthService(UserService userService, EmailValidatorService emailValidatorService, ConfirmationTokenService confirmationTokenService, EmailSender emailSender, UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public AuthService(UserService userService, ConfirmationTokenService confirmationTokenService, EmailSender emailSender, UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userService = userService;
         this.confirmationTokenService = confirmationTokenService;
         this.emailSender = emailSender;
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-//        this.tokenProvider = tokenProvider;
+
 //        this.authenticationManager = authenticationManager;
     }
 
@@ -148,7 +149,7 @@ public class AuthService {
                 "</div></div>";
     }
 
-    public ResponseEntity<String> Login(User userRequest) {
+    public ResponseEntity<String> login(User userRequest) {
         Optional<User> optionalUser = userRepository.findByUsername(userRequest.getUsername());
         if (optionalUser.isEmpty()) {
             optionalUser = userRepository.findByEmail(userRequest.getEmail());
@@ -161,7 +162,7 @@ public class AuthService {
                 if(user.isEnabled()) {
 //                    authenticationManager.authenticate(
 //                            new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
-//                    );
+//                    ;
 //
 //                    List<String> roles = new ArrayList<>();
 //                    roles.add(user.getRole().name());

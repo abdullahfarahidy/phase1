@@ -1,25 +1,20 @@
 package net.java.lms_backend.controller;
 
-import net.java.lms_backend.Repositrory.PerformanceRepo;
 import net.java.lms_backend.Service.CourseService;
 import net.java.lms_backend.dto.*;
-import net.java.lms_backend.entity.Attendance;
-import net.java.lms_backend.entity.Course;
 import net.java.lms_backend.entity.Lesson;
-import net.java.lms_backend.entity.Performance;
-import net.java.lms_backend.mapper.PerformanceMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/courses")
 public class CourseController {
     private final CourseService courseService;
+    // course-rating
     private final PerformanceRepo performanceRepo;
 
     public CourseController(CourseService courseService, PerformanceRepo performanceRepo) {
@@ -42,6 +37,7 @@ public class CourseController {
         }
     }
 
+ main
     @PostMapping
     public ResponseEntity<Coursedto> createCourse(@RequestBody Coursedto coursedto) {
         Coursedto newCourse = courseService.CreateCourse(coursedto);
@@ -65,8 +61,10 @@ public class CourseController {
     }
 
     @GetMapping("/instructor/{instructorId}")
+   // course-rating
     public ResponseEntity<List<Coursedto>> getCoursesByInstructor(
             @PathVariable Long instructorId) {
+  main
         List<Coursedto> courses = courseService.getCoursesByInstructor(instructorId);
         return ResponseEntity.ok(courses);
     }
