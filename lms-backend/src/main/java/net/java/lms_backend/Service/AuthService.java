@@ -19,7 +19,6 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static net.java.lms_backend.mapper.UserMapper.ToUserRegister;
-
 @Service
 public class AuthService {
     private final UserService userService;
