@@ -28,7 +28,7 @@ public class CourseService {
     private final AttendanceRepo attendanceRepo;
     private final PerformanceRepo performanceRepo;
 
-    public UserRepository getUserRepo() {
+        public UserRepository getUserRepo() {
         return userRepo;
     }
 
@@ -60,22 +60,43 @@ public class CourseService {
         return performanceRepo;
     }
 
-
-    public CourseService(CourseRepository courseRepo, UserRepository userRepo, InstructorRepository instructorRepo, LessonRepositery lessonRepo, EnrollmentRepo enrollmentRepo, StudentRepository studentRepository, AttendanceRepo attendanceRepo, PerformanceRepo performanceRepo) {
+    public CourseService(CourseRepository courseRepo, UserRepository userRepo, 
+                       InstructorRepository instructorRepo, LessonRepositery lessonRepo,
+                       EnrollmentRepo enrollmentRepo, StudentRepository studentRepository,
+                       AttendanceRepo attendanceRepo, PerformanceRepo performanceRepo) {
         this.courseRepo = courseRepo;
         this.userRepo = userRepo;
         this.instructorRepo = instructorRepo;
-        this.lessonRepo=lessonRepo;
-        this.enrollmentRepo=enrollmentRepo;
+        this.lessonRepo = lessonRepo;
+        this.enrollmentRepo = enrollmentRepo;
         this.studentRepository = studentRepository;
-        this.attendanceRepo=attendanceRepo;
-        this.performanceRepo=performanceRepo;
+        this.attendanceRepo = attendanceRepo;
+        this.performanceRepo = performanceRepo;
+    }
+
+    // دالة تقييم الكورس الجديدة
+    public Coursedto rateCourse(Long courseId, Double ratingValue) {
+        if (ratingValue == null || ratingValue < 0 || ratingValue > 5) {
+            throw new IllegalArgumentException("Rating must be between 0 and 5");
+        }
+
+        Course course = courseRepo.findById(courseId)
+                .orElseThrow(() -> new RuntimeException("Course not found with id: " + courseId));
+
+        // حساب التقييم الجديد
+        double currentTotal = (course.getRating() != null ? course.getRating() : 0) * 
+                            (course.getRatingCount() != null ? course.getRatingCount() : 0);
+        int newCount = (course.getRatingCount() != null ? course.getRatingCount() : 0) + 1;
+        double newRating = (currentTotal + ratingValue) / newCount;
+        
+        course.setRating(newRating);
+        course.setRatingCount(newCount);
+        
+        Course updatedCourse = courseRepo.save(course);
+        return CourseMapper.mapToCoursedto(updatedCourse);
     }
 
     public Coursedto CreateCourse(Coursedto coursedto) {
-//        User user = userRepo.findById(coursedto.getUser ().getId())
-//                .orElseThrow(() -> new RuntimeException("User  not found with id: " + coursedto.getUser ().getId()));
-
         Instructor instructor = instructorRepo.findById(coursedto.getInstructorId())
                 .orElseThrow(() -> new RuntimeException("Instructor not found with id: " + coursedto.getInstructorId()));
 
@@ -83,8 +104,9 @@ public class CourseService {
         course.setTitle(coursedto.getTitle());
         course.setDescription(coursedto.getDescription());
         course.setDuration(coursedto.getDuration());
-//        course.setUser (user);
         course.setInstructor(instructor);
+        course.setRating(0.0); // Initialize rating
+        course.setRatingCount(0); // Initialize rating count
 
         if (coursedto.getMediaFiles() != null) {
             for (MediaFiles mediaFile : coursedto.getMediaFiles()) {
@@ -97,9 +119,10 @@ public class CourseService {
     }
 
     public List<Coursedto> ViewAllCourse() {
-        List<Course>courses=courseRepo.findAll();
-        return courses.stream().map(course -> CourseMapper.mapToCoursedto(course)).collect(Collectors.toList());
-
+        List<Course> courses = courseRepo.findAll();
+        return courses.stream()
+                .map(CourseMapper::mapToCoursedto)
+                .collect(Collectors.toList());
     }
 
     public List<Coursedto> getCoursesByInstructor(Long instructorId) {
@@ -108,22 +131,24 @@ public class CourseService {
                 .map(CourseMapper::mapToCoursedto)
                 .collect(Collectors.toList());
     }
-    public void deleteCourse(Long CourseId){
 
+    public void deleteCourse(Long CourseId) {
         courseRepo.deleteById(CourseId);
     }
+
     public Coursedto getCourseById(Long id) {
-        Course course=courseRepo.findById(id).orElseThrow(() -> new RuntimeException("Course not found with id " + id));
+        Course course = courseRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Course not found with id " + id));
         return CourseMapper.mapToCoursedto(course);
     }
 
     public Lesson addLessonToCourse(Long courseId, Lesson lesson) {
         Course course = courseRepo.findById(courseId)
                 .orElseThrow(() -> new RuntimeException("Course not found with id: " + courseId));
-
         course.addLesson(lesson);
         return lessonRepo.save(lesson);
     }
+
     public void uploadMediaFiles(Long courseId, List<MultipartFile> files) {
         Course course = courseRepo.findById(courseId)
                 .orElseThrow(() -> new RuntimeException("Course not found with id: " + courseId));
@@ -142,13 +167,13 @@ public class CourseService {
                 MediaFiles mediaFile = new MediaFiles();
                 mediaFile.setFileName(file.getOriginalFilename());
                 course.addMediaFile(mediaFile);
-
             } catch (IOException e) {
                 throw new RuntimeException("Error saving file: " + file.getOriginalFilename(), e);
             }
         }
         courseRepo.save(course);
     }
+
     public void enrollStudentInCourse(Long courseId, Long studentId) {
         Course course = courseRepo.findById(courseId)
                 .orElseThrow(() -> new RuntimeException("Course not found with id: " + courseId));
@@ -174,45 +199,48 @@ public class CourseService {
                 .map(enrollment -> StudentMapper.mapToStudentDTO(enrollment.getStudent()))
                 .collect(Collectors.toList());
     }
-    public String generateOtp(Long lessonId){
-        Lesson lesson=lessonRepo.findById(lessonId).orElseThrow(()->new RuntimeException("Lesson with id not found : " + lessonId));
-        String otp = String.valueOf((int)(Math.random() * 9999)+1000000);
+
+    public String generateOtp(Long lessonId) {
+        Lesson lesson = lessonRepo.findById(lessonId)
+                .orElseThrow(() -> new RuntimeException("Lesson with id not found : " + lessonId));
+        String otp = String.valueOf((int)(Math.random() * 9999) + 1000000);
         Attendance attendance = new Attendance();
         attendance.setLesson(lesson);
         attendance.setOtp(otp);
         attendance.setActive(true);
         attendanceRepo.save(attendance);
         return otp;
-
     }
+
     public boolean validateOtp(Long lessonId, String otp, Long studentId) {
         Attendance attendance = attendanceRepo.findByLessonIdAndOtp(lessonId, otp);
         if (attendance != null && attendance.isActive()) {
             attendance.setActive(false);
-            attendance.setStudent(studentRepository.findById(studentId).orElseThrow(() -> new RuntimeException("Student not found")));
+            attendance.setStudent(studentRepository.findById(studentId)
+                    .orElseThrow(() -> new RuntimeException("Student not found")));
             attendanceRepo.save(attendance);
-            Performance performance = performanceRepo.findByStudentIdAndCourseId(studentId, attendance.getLesson().getCourse().getId());
+            Performance performance = performanceRepo.findByStudentIdAndCourseId(studentId, 
+                    attendance.getLesson().getCourse().getId());
             if (performance != null) {
                 performance.setTotalLessonsAttended(performance.getTotalLessonsAttended() + 1);
                 performanceRepo.save(performance);
             }
-
             return true;
         }
-
         return false;
     }
+
     public int getPerformanceForStudent(Long studentId, Long courseId) {
         Performance performance = performanceRepo.findByStudentIdAndCourseId(studentId, courseId);
-
         if (performance == null) {
-            throw new RuntimeException("Performance record not found for studentId: " + studentId + " and courseId: " + courseId);
+            throw new RuntimeException("Performance record not found for studentId: " + 
+                    studentId + " and courseId: " + courseId);
         }
+        return performance.getTotalLessonsAttended();
+    }
 
-        return performance.getTotalLessonsAttended(); }
     public List<Attendancedto> getAttendanceForLesson(Long lessonId) {
         List<Attendance> attendanceList = attendanceRepo.findByLessonId(lessonId);
-
         return attendanceList.stream()
                 .map(attendance -> {
                     Attendancedto dto = new Attendancedto();
@@ -224,6 +252,7 @@ public class CourseService {
                 })
                 .collect(Collectors.toList());
     }
+
     public void addQuestionsToCourse(Long courseId, List<QuestionDTO> questionDTOs) {
         Course course = courseRepo.findById(courseId)
                 .orElseThrow(() -> new RuntimeException("Course not found with id: " + courseId));
@@ -231,12 +260,12 @@ public class CourseService {
         List<Question> questions = questionDTOs.stream()
                 .map(questionDTO -> {
                     Question question = QuestionMapper.mapToQuestion(questionDTO, course);
-                    course.addQuestion(question); // Ensure bidirectional relationship is maintained
+                    course.addQuestion(question);
                     return question;
                 })
                 .collect(Collectors.toList());
 
-        course.getQuestionsBank().addAll(questions); // Add all questions to the course's question bank
+        course.getQuestionsBank().addAll(questions);
         courseRepo.save(course);
     }
 
@@ -244,11 +273,8 @@ public class CourseService {
         Course course = courseRepo.findById(courseId)
                 .orElseThrow(() -> new RuntimeException("Course not found with id: " + courseId));
 
-        List<Question> questions = course.getQuestionsBank();
-
-        return questions.stream()
+        return course.getQuestionsBank().stream()
                 .map(QuestionMapper::mapToQuestionDTO)
                 .collect(Collectors.toList());
     }
-
 }

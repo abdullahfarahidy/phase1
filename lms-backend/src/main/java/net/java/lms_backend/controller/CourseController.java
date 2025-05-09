@@ -14,11 +14,30 @@ import java.util.List;
 @RequestMapping("/api/courses")
 public class CourseController {
     private final CourseService courseService;
+    // course-rating
+    private final PerformanceRepo performanceRepo;
 
-    public CourseController(CourseService courseService) {
+    public CourseController(CourseService courseService, PerformanceRepo performanceRepo) {
         this.courseService = courseService;
+        this.performanceRepo = performanceRepo;
     }
 
+    // Endpoint لتقييم الكورس
+    @PutMapping("/{courseId}/rate")
+    public ResponseEntity<Coursedto> rateCourse(
+            @PathVariable Long courseId,
+            @RequestParam Double rating) {
+        try {
+            Coursedto ratedCourse = courseService.rateCourse(courseId, rating);
+            return ResponseEntity.ok(ratedCourse);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+ main
     @PostMapping
     public ResponseEntity<Coursedto> createCourse(@RequestBody Coursedto coursedto) {
         Coursedto newCourse = courseService.CreateCourse(coursedto);
@@ -26,7 +45,9 @@ public class CourseController {
     }
 
     @PostMapping("/{courseId}/lessons")
-    public ResponseEntity<Lesson> addLessonToCourse(@PathVariable Long courseId, @RequestBody LessonDTO lessonDTO) {
+    public ResponseEntity<Lesson> addLessonToCourse(
+            @PathVariable Long courseId, 
+            @RequestBody LessonDTO lessonDTO) {
         Lesson lesson = new Lesson();
         lesson.setTitle(lessonDTO.getTitle());
         lesson.setContent(lessonDTO.getContent());
@@ -40,7 +61,10 @@ public class CourseController {
     }
 
     @GetMapping("/instructor/{instructorId}")
-    public ResponseEntity<List<Coursedto>> getCoursesByInstructor(@PathVariable Long instructorId) {
+   // course-rating
+    public ResponseEntity<List<Coursedto>> getCoursesByInstructor(
+            @PathVariable Long instructorId) {
+  main
         List<Coursedto> courses = courseService.getCoursesByInstructor(instructorId);
         return ResponseEntity.ok(courses);
     }
@@ -72,13 +96,16 @@ public class CourseController {
     }
 
     @PostMapping("/{courseId}/enroll")
-    public ResponseEntity<Void> enrollInCourse(@PathVariable Long courseId, @RequestBody Enrollmentdto enrollmentRequest) {
+    public ResponseEntity<Void> enrollInCourse(
+            @PathVariable Long courseId, 
+            @RequestBody Enrollmentdto enrollmentRequest) {
         courseService.enrollStudentInCourse(courseId, enrollmentRequest.getStudentId());
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{courseId}/enrollments")
-    public ResponseEntity<List<StudentDTO>> getEnrolledStudents(@PathVariable Long courseId) {
+    public ResponseEntity<List<StudentDTO>> getEnrolledStudents(
+            @PathVariable Long courseId) {
         List<StudentDTO> students = courseService.getEnrolledStudents(courseId);
         return ResponseEntity.ok(students);
     }
@@ -90,31 +117,41 @@ public class CourseController {
     }
 
     @PostMapping("/{courseId}/lessons/{lessonId}/validate-otp")
-    public ResponseEntity<Boolean> validateOtp(@PathVariable Long lessonId, @RequestParam String otp, @RequestParam Long studentId) {
+    public ResponseEntity<Boolean> validateOtp(
+            @PathVariable Long lessonId, 
+            @RequestParam String otp, 
+            @RequestParam Long studentId) {
         boolean attend = courseService.validateOtp(lessonId, otp, studentId);
         return ResponseEntity.ok(attend);
     }
 
     @GetMapping("/{courseId}/performance/{studentId}")
-    public ResponseEntity<Integer> getPerformance(@PathVariable Long courseId, @PathVariable Long studentId) {
+    public ResponseEntity<Integer> getPerformance(
+            @PathVariable Long courseId, 
+            @PathVariable Long studentId) {
         int totalLessonsAttended = courseService.getPerformanceForStudent(studentId, courseId);
         return ResponseEntity.ok(totalLessonsAttended);
     }
 
     @GetMapping("/{courseId}/lessons/{lessonId}/attendance")
-    public ResponseEntity<List<Attendancedto>> getAttendanceForLesson(@PathVariable Long courseId, @PathVariable Long lessonId) {
+    public ResponseEntity<List<Attendancedto>> getAttendanceForLesson(
+            @PathVariable Long courseId, 
+            @PathVariable Long lessonId) {
         List<Attendancedto> attendanceRecords = courseService.getAttendanceForLesson(lessonId);
         return ResponseEntity.ok(attendanceRecords);
     }
 
     @PostMapping("/{courseId}/add-questions")
-    public ResponseEntity<Void> addQuestionsToCourse(@PathVariable Long courseId, @RequestBody List<QuestionDTO> questionDTOs) {
+    public ResponseEntity<Void> addQuestionsToCourse(
+            @PathVariable Long courseId, 
+            @RequestBody List<QuestionDTO> questionDTOs) {
         courseService.addQuestionsToCourse(courseId, questionDTOs);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{courseId}/questions")
-    public ResponseEntity<List<QuestionDTO>> getQuestionsByCourseId(@PathVariable Long courseId) {
+    public ResponseEntity<List<QuestionDTO>> getQuestionsByCourseId(
+            @PathVariable Long courseId) {
         List<QuestionDTO> questions = courseService.getQuestionsByCourseId(courseId);
         return ResponseEntity.ok(questions);
     }
