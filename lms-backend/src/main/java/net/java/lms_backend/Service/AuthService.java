@@ -1,8 +1,8 @@
-package net.java.lms_backend.Service;
+package net.java.lms_backend.service;
 
 import net.java.lms_backend.Repositrory.EmailSender;
 import net.java.lms_backend.Repositrory.UserRepository;
-
+i
 import net.java.lms_backend.dto.RegisterDTO;
 import net.java.lms_backend.entity.ConfirmationToken;
 import net.java.lms_backend.entity.User;
@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static net.java.lms_backend.mapper.UserMapper.ToUserRegister;
+
 @Service
 public class AuthService {
     private final UserService userService;
@@ -148,7 +149,7 @@ public class AuthService {
                 "</div></div>";
     }
 
-    public ResponseEntity<String> Login(User userRequest) {
+    public ResponseEntity<String> login(User userRequest) {
         Optional<User> optionalUser = userRepository.findByUsername(userRequest.getUsername());
         if (optionalUser.isEmpty()) {
             optionalUser = userRepository.findByEmail(userRequest.getEmail());
