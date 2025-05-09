@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CourseMapper {
-    public static Coursedto mapToCoursedto(Course course){
+    public static Coursedto mapToCoursedto(Course course) {
         return new Coursedto(
                 course.getId(),
                 course.getTitle(),
@@ -16,14 +16,14 @@ public class CourseMapper {
                 course.getMediaFiles().stream()
                         .map(mediaFile -> new MediaFiles(mediaFile.getId(), mediaFile.getFileName()))
                         .collect(Collectors.toList()),
-               // course.getUser().getId(),
-                course.getInstructor().getId()
+                course.getInstructor().getId(),
+                course.getRating(),
+                course.getRatingCount()
         );
-
-
     }
+
     public static Course maptoCourse(Coursedto coursedto) {
-        if(coursedto==null){
+        if (coursedto == null) {
             throw new NullPointerException("The CourseDTO Should not be null");
         }
         Course course = new Course();
@@ -32,9 +32,9 @@ public class CourseMapper {
         course.setDescription(coursedto.getDescription());
         course.setDuration(coursedto.getDuration());
         course.setMediaFiles(coursedto.getMediaFiles());
-//        course.setUser(coursedto.getUser());
         course.setInstructor(coursedto.getInstructor());
+        course.setRating(coursedto.getRating());
+        course.setRatingCount(coursedto.getRatingCount());
         return course;
     }
-
 }
