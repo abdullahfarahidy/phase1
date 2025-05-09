@@ -1,8 +1,8 @@
-package net.java.lms_backend.Service;
+package net.java.lms_backend.service;
 
-import net.java.lms_backend.Repositrory.ConfirmationTokenRepository;
+
 import net.java.lms_backend.Repositrory.UserRepository;
-import net.java.lms_backend.Security.Jwt.JwtTokenProvider;
+
 import net.java.lms_backend.entity.ConfirmationToken;
 import net.java.lms_backend.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,15 +14,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+
+
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class UserService implements UserDetailsService {
 
-    @Autowired
+    
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ConfirmationTokenService confirmationTokenService;
@@ -49,12 +49,10 @@ public class UserService implements UserDetailsService {
             user = userRepository.findByEmail(identifier);
         }
 
-        // If the user is still not found, throw UsernameNotFoundException
-        User foundUser = user.orElseThrow(() ->
-                new UsernameNotFoundException("User Not Found"));
+
 
         // Map the found User to a Spring Security UserDetails object
-        return foundUser;
+        return  user.orElseThrow(() -> new UsernameNotFoundException("User Not Found"));
     }
 
     public int enableUser(String email) {
