@@ -1,4 +1,4 @@
-package net.java.lms_backend.Service;
+package net.java.lms_backend.service;
 
 import net.java.lms_backend.Repositrory.ConfirmationTokenRepository;
 import net.java.lms_backend.Repositrory.UserRepository;
