@@ -1,4 +1,4 @@
-package net.java.lms_backend.Security;
+package net.java.lms_backend.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
