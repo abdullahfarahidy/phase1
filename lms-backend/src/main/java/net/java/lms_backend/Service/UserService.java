@@ -1,8 +1,8 @@
 package net.java.lms_backend.service;
 
-import net.java.lms_backend.Repositrory.ConfirmationTokenRepository;
+
 import net.java.lms_backend.Repositrory.UserRepository;
-import net.java.lms_backend.Security.Jwt.JwtTokenProvider;
+
 import net.java.lms_backend.entity.ConfirmationToken;
 import net.java.lms_backend.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +14,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+
+
 import java.util.Optional;
 import java.util.UUID;
 
