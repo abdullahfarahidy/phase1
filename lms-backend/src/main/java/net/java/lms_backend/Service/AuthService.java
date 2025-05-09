@@ -27,7 +27,7 @@ public class AuthService {
     private final EmailSender emailSender;
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-//    private final JwtTokenProvider tokenProvider;
+
 //    private final AuthenticationManager authenticationManager;
     public AuthService(UserService userService, EmailValidatorService emailValidatorService, ConfirmationTokenService confirmationTokenService, EmailSender emailSender, UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userService = userService;
@@ -35,7 +35,7 @@ public class AuthService {
         this.emailSender = emailSender;
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-//        this.tokenProvider = tokenProvider;
+
 //        this.authenticationManager = authenticationManager;
     }
 
@@ -162,7 +162,7 @@ public class AuthService {
                 if(user.isEnabled()) {
 //                    authenticationManager.authenticate(
 //                            new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
-//                    );
+//                    ;
 //
 //                    List<String> roles = new ArrayList<>();
 //                    roles.add(user.getRole().name());
