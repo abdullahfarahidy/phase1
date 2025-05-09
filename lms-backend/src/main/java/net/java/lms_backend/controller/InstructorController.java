@@ -1,12 +1,8 @@
 package net.java.lms_backend.controller;
 
-import net.java.lms_backend.Service.StudentService;
 import net.java.lms_backend.Service.SubmissionService;
-import net.java.lms_backend.dto.StudentDTO;
 import net.java.lms_backend.dto.SubmissionDTO;
-import net.java.lms_backend.entity.Submission;
 import net.java.lms_backend.mapper.SubmissionMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,15 +15,14 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/instructor")
 public class InstructorController {
-    private SubmissionService SubmissionService;
-    public InstructorController(SubmissionService submissionService) {
-        this.submissionService = submissionService;
-    }
-    @Autowired
-    private SubmissionService submissionService;
 
-    @Autowired
-    private SubmissionMapper submissionMapper;
+    private final SubmissionService submissionService;
+    private final SubmissionMapper submissionMapper;
+
+    public InstructorController(SubmissionService submissionService, SubmissionMapper submissionMapper) {
+        this.submissionService = submissionService;
+        this.submissionMapper = submissionMapper;
+    }
 
     @PostMapping("/{assignmentId}/submit")
     public ResponseEntity<SubmissionDTO> createSubmission(
@@ -45,7 +40,6 @@ public class InstructorController {
         return ResponseEntity.ok(submissions);
     }
 
-
     @PatchMapping("/submissions/{id}/gradeAndFeedback")
     public SubmissionDTO updateSubmissionGrade(@PathVariable Long id,
                                                @RequestBody SubmissionDTO.SubmissionGradeAndFeedbackDTO submissionGradeAndFeedbackDTO) {
@@ -53,7 +47,6 @@ public class InstructorController {
         String feedback = submissionGradeAndFeedbackDTO.getFeedback();
         return submissionService.patchSubmissionGradeAndFeedback(id, grade, feedback);
     }
-
 
     @GetMapping("/assignment/performance/{assignment_id}")
     public ResponseEntity<Map<String, Object>> getAssignmentPerformance(@PathVariable Long assignment_id) {
@@ -73,5 +66,4 @@ public class InstructorController {
         List<SubmissionDTO> submissions = submissionService.getSubmissionsByStudentIdAndCourseId(studentId, courseId);
         return ResponseEntity.ok(submissions);
     }
-
 }
