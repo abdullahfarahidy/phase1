@@ -2,7 +2,7 @@ package net.java.lms_backend.service;
 
 import net.java.lms_backend.Repositrory.EmailSender;
 import net.java.lms_backend.Repositrory.UserRepository;
-i
+
 import net.java.lms_backend.dto.RegisterDTO;
 import net.java.lms_backend.entity.ConfirmationToken;
 import net.java.lms_backend.entity.User;
@@ -29,7 +29,7 @@ public class AuthService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 //    private final AuthenticationManager authenticationManager;
-    public AuthService(UserService userService, EmailValidatorService emailValidatorService, ConfirmationTokenService confirmationTokenService, EmailSender emailSender, UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public AuthService(UserService userService, ConfirmationTokenService confirmationTokenService, EmailSender emailSender, UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userService = userService;
         this.confirmationTokenService = confirmationTokenService;
         this.emailSender = emailSender;
