@@ -49,12 +49,10 @@ public class UserService implements UserDetailsService {
             user = userRepository.findByEmail(identifier);
         }
 
-        // If the user is still not found, throw UsernameNotFoundException
-        User foundUser = user.orElseThrow(() ->
-                new UsernameNotFoundException("User Not Found"));
+
 
         // Map the found User to a Spring Security UserDetails object
-        return foundUser;
+        return  user.orElseThrow(() -> new UsernameNotFoundException("User Not Found"));
     }
 
     public int enableUser(String email) {
