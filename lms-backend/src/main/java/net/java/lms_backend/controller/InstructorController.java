@@ -64,4 +64,7 @@ public class InstructorController {
         List<SubmissionDTO> submissions = submissionSvc.getSubmissionsByStudentIdAndCourseId(studentId, courseId);
         return ResponseEntity.ok(submissions);
     }
+fixSmellCodeInInstructorController
 }
+
+ main

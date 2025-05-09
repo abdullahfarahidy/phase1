@@ -14,11 +14,32 @@ import java.util.List;
 @RequestMapping("/api/courses")
 public class CourseController {
     private final CourseService courseService;
+ fixSmellCodeInInstructorController
+
+    // course-rating
+main
     private final PerformanceRepo performanceRepo;
 
     public CourseController(CourseService courseService, PerformanceRepo performanceRepo) {
         this.courseService = courseService;
         this.performanceRepo = performanceRepo;
+ fixSmellCodeInInstructorController
+    }
+
+    // Endpoint لتقييم الكورس
+    @PutMapping("/{courseId}/rate")
+    public ResponseEntity<Coursedto> rateCourse(
+            @PathVariable Long courseId,
+            @RequestParam Double rating) {
+        try {
+            Coursedto ratedCourse = courseService.rateCourse(courseId, rating);
+            return ResponseEntity.ok(ratedCourse);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+ main
     }
 
     // Endpoint لتقييم الكورس
@@ -36,6 +57,7 @@ public class CourseController {
         }
     }
 
+ main
     @PostMapping
     public ResponseEntity<Coursedto> createCourse(@RequestBody Coursedto coursedto) {
         Coursedto newCourse = courseService.CreateCourse(coursedto);
@@ -59,8 +81,10 @@ public class CourseController {
     }
 
     @GetMapping("/instructor/{instructorId}")
+ fixSmellCodeInInstructorController
     public ResponseEntity<List<Coursedto>> getCoursesByInstructor(
             @PathVariable Long instructorId) {
+ main
         List<Coursedto> courses = courseService.getCoursesByInstructor(instructorId);
         return ResponseEntity.ok(courses);
     }
