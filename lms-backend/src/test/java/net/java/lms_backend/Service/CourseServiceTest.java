@@ -19,10 +19,10 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.Optional;
 
-
 class CourseServiceTest {
     @InjectMocks
     private CourseService courseService;
+
     @Mock
     private CourseRepository courseRepo;
     @Mock
@@ -39,6 +39,7 @@ class CourseServiceTest {
     private AttendanceRepo attendanceRepo;
     @Mock
     private PerformanceRepo performanceRepo;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -50,12 +51,12 @@ class CourseServiceTest {
         MediaFiles mediaFile2 = new MediaFiles(2L, "file2.doc");
         Instructor instructor = new Instructor();
         instructor.setId(1L);
-        Coursedto coursedto=new Coursedto(
+        Coursedto coursedto = new Coursedto(
                 null,
                 "Advanced SW",
                 "course on Sw",
                 "6 weeks",
-                List.of(mediaFile1,mediaFile2),
+                List.of(mediaFile1, mediaFile2),
                 instructor.getId()
         );
 
@@ -82,14 +83,14 @@ class CourseServiceTest {
 
         verify(instructorRepo, times(1)).findById(1L);
         verify(courseRepo, times(1)).save(any(Course.class));
-
     }
 
     @Test
     void viewAllCourse() {
-        List<Course> courses=new ArrayList<>();
+        List<Course> courses = new ArrayList<>();
         MediaFiles mediaFile1 = new MediaFiles(1L, "file1.pdf");
         MediaFiles mediaFile2 = new MediaFiles(2L, "file2.doc");
+        User dummyUser = new User();
         Instructor instructor = new Instructor();
         instructor.setId(1L);
         courses.add(new Course(
@@ -97,9 +98,9 @@ class CourseServiceTest {
                 "Advanced SW",
                 "course on Sw",
                 "6 weeks",
-                List.of(mediaFile1,mediaFile2),
+                List.of(mediaFile1, mediaFile2),
+                dummyUser,
                 instructor
-
         ));
         when(courseRepo.findAll()).thenReturn(courses);
         List<Coursedto> result = courseService.ViewAllCourse();
@@ -110,8 +111,6 @@ class CourseServiceTest {
         assertEquals(courses.get(0).getMediaFiles().get(0).getFileName(), result.get(0).getMediaFiles().get(0).getFileName());
         assertEquals(courses.get(0).getMediaFiles().get(1).getFileName(), result.get(0).getMediaFiles().get(1).getFileName());
         verify(courseRepo, times(1)).findAll();
-
-
     }
 
     @Test
@@ -119,17 +118,18 @@ class CourseServiceTest {
         Long instructorId = 1L;
         MediaFiles mediaFile1 = new MediaFiles(1L, "file1.pdf");
         MediaFiles mediaFile2 = new MediaFiles(2L, "file2.doc");
+        User dummyUser = new User();
         Instructor instructor = new Instructor();
         instructor.setId(1L);
-        List<Course> courses=new ArrayList<>();
+        List<Course> courses = new ArrayList<>();
         courses.add(new Course(
                 1L,
                 "Advanced SW",
                 "course on Sw",
                 "6 weeks",
-                List.of(mediaFile1,mediaFile2),
+                List.of(mediaFile1, mediaFile2),
+                dummyUser,
                 instructor
-
         ));
         when(courseRepo.findByInstructorId(instructorId)).thenReturn(courses);
         List<Coursedto> result = courseService.getCoursesByInstructor(instructorId);
@@ -140,22 +140,23 @@ class CourseServiceTest {
         assertEquals(courses.get(0).getMediaFiles().get(0).getFileName(), result.get(0).getMediaFiles().get(0).getFileName());
         assertEquals(courses.get(0).getMediaFiles().get(1).getFileName(), result.get(0).getMediaFiles().get(1).getFileName());
         verify(courseRepo, times(1)).findByInstructorId(instructorId);
-
-
     }
+
     @Test
     void getCourseById() {
-        Long courseId=1L;
+        Long courseId = 1L;
         MediaFiles mediaFile1 = new MediaFiles(1L, "file1.pdf");
         MediaFiles mediaFile2 = new MediaFiles(2L, "file2.doc");
+        User dummyUser = new User();
         Instructor instructor = new Instructor();
         instructor.setId(1L);
-        Course course=new Course(
+        Course course = new Course(
                 1L,
                 "Advanced SW",
                 "course on Sw",
                 "6 weeks",
-                List.of(mediaFile1,mediaFile2),
+                List.of(mediaFile1, mediaFile2),
+                dummyUser,
                 instructor
         );
         when(courseRepo.findById(courseId)).thenReturn(Optional.of(course));
@@ -166,17 +167,13 @@ class CourseServiceTest {
         assertEquals(course.getMediaFiles().get(0).getFileName(), result.getMediaFiles().get(0).getFileName());
         assertEquals(course.getMediaFiles().get(1).getFileName(), result.getMediaFiles().get(1).getFileName());
         verify(courseRepo, times(1)).findById(1L);
-
-
     }
+
     @Test
     void deleteCourse() {
         Long courseId = 1L;
-
         doNothing().when(courseRepo).deleteById(courseId);
-
         courseService.deleteCourse(courseId);
-
         verify(courseRepo, times(1)).deleteById(courseId);
     }
 
@@ -213,10 +210,7 @@ class CourseServiceTest {
         course.setTitle("Advanced SW");
         when(courseRepo.findById(courseId)).thenReturn(Optional.of(course));
         when(courseRepo.save(any(Course.class))).thenAnswer(invocation -> invocation.getArgument(0));
-
-
         courseService.uploadMediaFiles(courseId, files);
-
         assertEquals(files.size(), course.getMediaFiles().size());
         assertEquals(files.get(0).getOriginalFilename(), course.getMediaFiles().get(0).getFileName());
         verify(courseRepo, times(1)).save(course);
@@ -226,7 +220,6 @@ class CourseServiceTest {
     void enrollStudentInCourse() {
         Long courseId = 1L;
         Long studentId = 2L;
-
 
         Course course = new Course();
         course.setId(courseId);
@@ -239,10 +232,8 @@ class CourseServiceTest {
         courseService.enrollStudentInCourse(courseId, studentId);
 
         verify(enrollmentRepo, times(1)).save(any(Enrollment.class));
-
         verify(performanceRepo, times(1)).save(any(Performance.class));
     }
-
 
     @Test
     void getEnrolledStudents() {
@@ -254,25 +245,25 @@ class CourseServiceTest {
         Student student2 = new Student();
         student2.setId(2L);
         student2.setUsername("Student 2");
+
         Enrollment enrollment1 = new Enrollment();
         enrollment1.setStudent(student1);
 
         Enrollment enrollment2 = new Enrollment();
         enrollment2.setStudent(student2);
 
-        List<Enrollment> Enrollments = List.of(enrollment1, enrollment2);
+        List<Enrollment> enrollments = List.of(enrollment1, enrollment2);
 
-        when(enrollmentRepo.findByCourseId(courseId)).thenReturn(Enrollments);
+        when(enrollmentRepo.findByCourseId(courseId)).thenReturn(enrollments);
 
         List<StudentDTO> result = courseService.getEnrolledStudents(courseId);
 
-        assertEquals(Enrollments.size(), result.size());
-        assertEquals(Enrollments.get(0).getStudent().getId(), result.get(0).getId());
-        assertEquals(Enrollments.get(1).getStudent().getId(), result.get(1).getId());
+        assertEquals(enrollments.size(), result.size());
+        assertEquals(enrollments.get(0).getStudent().getId(), result.get(0).getId());
+        assertEquals(enrollments.get(1).getStudent().getId(), result.get(1).getId());
 
         verify(enrollmentRepo, times(1)).findByCourseId(courseId);
     }
-
 
     @Test
     void generateOtp() {
@@ -286,7 +277,6 @@ class CourseServiceTest {
         assertNotNull(otp);
         assertFalse(otp.isEmpty());
         verify(attendanceRepo, times(1)).save(any(Attendance.class));
-
     }
 
     @Test
@@ -294,6 +284,7 @@ class CourseServiceTest {
         Long lessonId = 1L;
         String otp = "10098";
         Long studentId = 1L;
+
         Course course = new Course();
         course.setId(1L);
         Lesson lesson = new Lesson();
@@ -316,18 +307,13 @@ class CourseServiceTest {
 
         boolean result = courseService.validateOtp(lessonId, otp, studentId);
 
-
         assertTrue(result);
         assertFalse(attendance.isActive());
         assertEquals(student, attendance.getStudent());
         assertEquals(1, performance.getTotalLessonsAttended());
 
-
         verify(attendanceRepo, times(1)).save(attendance);
         verify(studentRepository, times(1)).findById(studentId);
         verify(performanceRepo, times(1)).save(performance);
     }
-
-
-
 }
