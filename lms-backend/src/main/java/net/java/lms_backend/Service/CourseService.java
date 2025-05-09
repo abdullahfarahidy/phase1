@@ -27,6 +27,7 @@ public class CourseService {
     private final EnrollmentRepo enrollmentRepo;
     private final AttendanceRepo attendanceRepo;
     private final PerformanceRepo performanceRepo;
+ fixSmellCodeInInstructorController
 
         public UserRepository getUserRepo() {
         return userRepo;
@@ -60,6 +61,7 @@ public class CourseService {
         return performanceRepo;
     }
 
+main
     public CourseService(CourseRepository courseRepo, UserRepository userRepo, 
                        InstructorRepository instructorRepo, LessonRepositery lessonRepo,
                        EnrollmentRepo enrollmentRepo, StudentRepository studentRepository,
