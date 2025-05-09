@@ -1,6 +1,5 @@
 package net.java.lms_backend.controller;
 
-import net.java.lms_backend.Repositrory.PerformanceRepo;
 import net.java.lms_backend.Service.CourseService;
 import net.java.lms_backend.dto.*;
 import net.java.lms_backend.entity.Lesson;
@@ -15,11 +14,9 @@ import java.util.List;
 @RequestMapping("/api/courses")
 public class CourseController {
     private final CourseService courseService;
-    private final PerformanceRepo performanceRepo;
 
-    public CourseController(CourseService courseService, PerformanceRepo performanceRepo) {
+    public CourseController(CourseService courseService) {
         this.courseService = courseService;
-        this.performanceRepo = performanceRepo;
     }
 
     @PostMapping
