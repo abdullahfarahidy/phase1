@@ -16,10 +16,10 @@ import java.util.Map;
 @RequestMapping("/api/instructor")
 public class InstructorController {
 
-    private final SubmissionService submissionService;
+    private final SubmissionService submissionSvc;
 
-    public InstructorController(SubmissionService submissionService, SubmissionMapper submissionMapper) {
-        this.submissionService = submissionService;
+    public InstructorController(SubmissionService submissionSvc, SubmissionMapper submissionMapper) {
+        this.submissionSvc = submissionSvc;
     }
 
     @PostMapping("/{assignmentId}/submit")
@@ -28,13 +28,13 @@ public class InstructorController {
             @RequestParam Long studentId,
             @RequestParam("file") MultipartFile file) {
 
-        SubmissionDTO createdSubmission = submissionService.createSubmission(assignmentId, studentId, file);
+        SubmissionDTO createdSubmission = submissionSvc.createSubmission(assignmentId, studentId, file);
         return new ResponseEntity<>(createdSubmission, HttpStatus.CREATED);
     }
 
     @GetMapping("/assignment/submissions/{assignment_id}")
     public ResponseEntity<List<SubmissionDTO>> getSubmissionsByAssignmentId(@PathVariable Long assignment_id) {
-        List<SubmissionDTO> submissions = submissionService.getSubmissionsByAssignmentId(assignment_id);
+        List<SubmissionDTO> submissions = submissionSvc.getSubmissionsByAssignmentId(assignment_id);
         return ResponseEntity.ok(submissions);
     }
 
@@ -43,14 +43,14 @@ public class InstructorController {
                                                @RequestBody SubmissionDTO.SubmissionGradeAndFeedbackDTO submissionGradeAndFeedbackDTO) {
         double grade = submissionGradeAndFeedbackDTO.getGrade();
         String feedback = submissionGradeAndFeedbackDTO.getFeedback();
-        return submissionService.patchSubmissionGradeAndFeedback(id, grade, feedback);
+        return submissionSvc.patchSubmissionGradeAndFeedback(id, grade, feedback);
     }
 
     @GetMapping("/assignment/performance/{assignment_id}")
     public ResponseEntity<Map<String, Object>> getAssignmentPerformance(@PathVariable Long assignment_id) {
 
-        double averageGrade = submissionService.getAverageGradeByAssignmentId(assignment_id);
-        double nonGradedCount = submissionService.getNonGradedSubmissionsByAssignmentId(assignment_id);
+        double averageGrade = submissionSvc.getAverageGradeByAssignmentId(assignment_id);
+        double nonGradedCount = submissionSvc.getNonGradedSubmissionsByAssignmentId(assignment_id);
 
         Map<String, Object> response = new HashMap<>();
         response.put("average grades", averageGrade);
@@ -61,7 +61,7 @@ public class InstructorController {
 
     @GetMapping("course/{courseId}/student/{studentId}/submissions")
     public ResponseEntity<List<SubmissionDTO>> getSubmissionsByCourseAndStudent(@PathVariable Long courseId, @PathVariable Long studentId) {
-        List<SubmissionDTO> submissions = submissionService.getSubmissionsByStudentIdAndCourseId(studentId, courseId);
+        List<SubmissionDTO> submissions = submissionSvc.getSubmissionsByStudentIdAndCourseId(studentId, courseId);
         return ResponseEntity.ok(submissions);
     }
 }
