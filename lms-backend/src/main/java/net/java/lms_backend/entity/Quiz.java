@@ -1,8 +1,5 @@
 package net.java.lms_backend.entity;
 import jakarta.persistence.*;
-
-import java.util.List;
-
 @Entity
 public class Quiz extends Assessment {
 
