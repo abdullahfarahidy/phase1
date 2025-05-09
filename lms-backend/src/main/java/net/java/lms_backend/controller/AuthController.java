@@ -16,12 +16,11 @@ import static net.java.lms_backend.mapper.UserMapper.ToUserLogin;
 public class AuthController {
 
     private final AuthService authService;
-//    private final AuthenticationManager authenticationManager;
+
 //    private final JwtUtil jwtUtil;
 
     public AuthController(AuthService authService) {
         this.authService = authService;
-//        this.authenticationManager = authenticationManager;
 //        this.jwtUtil = jwtUtil;
     }
 
@@ -30,7 +29,7 @@ public class AuthController {
 
        /* Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
-        );
+        
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtUtil.generateToken(loginRequest.getUsername());
         return ResponseEntity.ok(token);*/
