@@ -11,10 +11,6 @@ public class Instructor extends User implements Serializable {
     @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL, orphanRemoval = true)
     private transient List<Course> courses; // Marked as transient to avoid serialization issues
 
-    public Instructor(User user) {
-        super(Role.INSTRUCTOR, user);
-    }
-
     public Instructor() {
         super(Role.INSTRUCTOR, new User());
     }
