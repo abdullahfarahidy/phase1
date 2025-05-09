@@ -17,11 +17,9 @@ import java.util.Map;
 public class InstructorController {
 
     private final SubmissionService submissionService;
-    private final SubmissionMapper submissionMapper;
 
     public InstructorController(SubmissionService submissionService, SubmissionMapper submissionMapper) {
         this.submissionService = submissionService;
-        this.submissionMapper = submissionMapper;
     }
 
     @PostMapping("/{assignmentId}/submit")
