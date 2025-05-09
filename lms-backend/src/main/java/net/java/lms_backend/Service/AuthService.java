@@ -2,25 +2,22 @@ package net.java.lms_backend.Service;
 
 import net.java.lms_backend.Repositrory.EmailSender;
 import net.java.lms_backend.Repositrory.UserRepository;
-import net.java.lms_backend.Security.Jwt.JwtTokenProvider;
-import net.java.lms_backend.dto.LoginRequestDTO;
+
 import net.java.lms_backend.dto.RegisterDTO;
 import net.java.lms_backend.entity.ConfirmationToken;
 import net.java.lms_backend.entity.User;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Optional;
-import static net.java.lms_backend.mapper.UserMapper.ToUserLogin;
+
 import static net.java.lms_backend.mapper.UserMapper.ToUserRegister;
 
 @Service

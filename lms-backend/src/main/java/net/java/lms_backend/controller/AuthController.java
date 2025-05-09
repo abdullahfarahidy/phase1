@@ -25,7 +25,7 @@ public class AuthController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<String> Login(@RequestBody LoginRequestDTO loginRequest) {
+    public ResponseEntity<String> login(@RequestBody LoginRequestDTO loginRequest) {
 
        /* Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
@@ -33,11 +33,11 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtUtil.generateToken(loginRequest.getUsername());
         return ResponseEntity.ok(token);*/
-        return authService.Login( ToUserLogin(loginRequest));
+        return authService.login( ToUserLogin(loginRequest));
     }
 
     @PostMapping("register")
-    public ResponseEntity<String> Register(@RequestBody RegisterDTO user) {
+    public ResponseEntity<String> register(@RequestBody RegisterDTO user) {
         return authService.register(user);
     }
 
